@@ -1,0 +1,54 @@
+jobs:
+- name: test-app-1
+  plan:
+  - get: app1
+    trigger: true
+  - task: backend-unit-tests
+    config:
+      platform: linux
+      image_resource:
+        type: registry-image
+        source:
+          repository: alpine
+      run:
+        path: sh
+        args:
+        - -o
+        - pipefail
+        - -c
+        - make backend-tests
+  - task: frontend-unit-tests
+    config:
+      platform: linux
+      image_resource:
+        type: registry-image
+        source:
+          repository: alpine
+      run:
+        path: sh
+        args:
+        - -o
+        - pipefail
+        - -c
+        - make frontend-tests
+
+
+
+
+
+resources:
+- name: app1
+  type: git
+  source:
+    uri: "https://github.com/factorypreset/bad-concourse"
+    paths:
+      - src/app1
+
+#- name: app2
+#  type: git
+#  source:
+#    uri: "https://github.com/factorypreset/bad-concourse"
+#    paths:
+#      - src/app2
+
+
